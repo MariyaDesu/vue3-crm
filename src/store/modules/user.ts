@@ -15,8 +15,8 @@ export const useUserStore = defineStore("user", () => {
   }
 
   async function toLogin(param: LoginRequest) {
-    await login(param).then((res) => {
-      setToken(res.token);
+    await login(param).then((res:any) => {
+      setToken(res.data.token);
       // setUserInfo(res.userInfo);
     });
   }

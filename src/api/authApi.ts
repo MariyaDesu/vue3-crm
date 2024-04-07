@@ -1,6 +1,7 @@
-import { LoginRequest, LoginResponse } from './types/authTypes.ts'
-import request from '@/utils/http'
+import { LoginRequest } from './types/authTypes.ts'
 
-export const login = (data: LoginRequest) => {
-  return request.post<LoginRequest, LoginResponse>('auth/login', data)
+import { post } from '@/utils/http/AxiosRequest'
+
+export function login(data: LoginRequest) {
+  return post('/user/login', { data }); //测试接口
 }

@@ -1,14 +1,19 @@
-import {defineConfig} from 'vite'
+import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 /**
  * unplugin-vue-components
  */
 import Components from 'unplugin-vue-components/vite'
-import {NaiveUiResolver} from 'unplugin-vue-components/resolvers'
-import {ViconsResolver} from './ViconsResolver'
+import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
+import { ViconsResolver } from './ViconsResolver'
 import UnoCSS from 'unocss/vite'
 
-import {resolve} from 'path'
+
+
+import { viteMockServe } from "vite-plugin-mock";
+
+
+import { resolve } from 'path'
 
 /** 路径查找 */
 const pathResolve = (dir: string): string => {
@@ -24,7 +29,14 @@ export default defineConfig({
       dirs: ['src/components'],
       resolvers: [NaiveUiResolver(), ViconsResolver()]
     }),
-    UnoCSS()
+    UnoCSS(),
+    viteMockServe({
+      mockPath: './mock',
+      enable: true,
+      watchFiles: true,
+      logger: true, //是否在控制台显示请求日志
+    })
+
   ],
   resolve: {
     alias: {

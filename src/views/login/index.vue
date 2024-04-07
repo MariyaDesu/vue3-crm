@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import { ref, Ref } from "vue";
-import { LoginRequest } from "@/api/types/authTypes.js";
+import { LoginRequest } from "@/api/types/authTypes";
 import { useUserStore } from "@/store/modules/user";
 import { useRouter, useRoute } from "vue-router";
 
@@ -66,14 +66,14 @@ const formRules = {
   password: { required: true, message: "Please Input Your Password", trigger: "blur" },
 };
 
-const toLogin = (e) => {
+const toLogin = (e:any) => {
   e.preventDefault();
   formRef.value.validate(async (errors: any) => {
     // 如果没有校验异常
     if (!errors) {
       await userStore.toLogin(formModel.value);
       window.$notification.success({
-        content: "欢迎回来 - " + userStore.getNickName(),
+        content: "欢迎回来 - ",
         duration: 2000,
       });
       const redirect = route.query.redirect as string;

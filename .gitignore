@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 
+.history/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -32,3 +34,5 @@ yarn-error.log
 
 pnpm-lock.yaml
 components.d.ts
+
+

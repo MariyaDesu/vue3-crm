@@ -1,10 +1,6 @@
-import { UserQuery, UserInfo, UserAddRequest } from "./types/userTypes";
-import request from '@/utils/http'
+import { get } from '@/utils/http/AxiosRequest'
+import type { UserRequest } from './types/userTypes'
 
-export const userPageQuery = (data: UserQuery) => {
-  return request.post<UserQuery, UserInfo>('user/pageQuery', data)
-};
-
-export const userAdd = (data: UserAddRequest) => {
-  return request.post<UserAddRequest, void>('user/add', data)
+export  function userRequest(params: UserRequest) {
+   return get('/users', { params }); //测试接口
 }

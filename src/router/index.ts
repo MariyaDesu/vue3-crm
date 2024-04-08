@@ -1,30 +1,18 @@
-import { createWebHistory, createRouter } from "vue-router";
-import type { App } from "vue";
-// 获取所有路由
-import routes from "./routes";
-
-import { useUserStore } from "@/store/modules/user.ts";
+/*
+ * @Author: 朽木白
+ * @Date: 2023-02-24 10:49:44
+ * @LastEditors: 1547702880@@qq.com
+ * @LastEditTime: 2023-02-25 14:15:40
+ * @Description: 路由入口文件
+ */
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import { staticRoutes } from './constantRoutes'
 
 const router = createRouter({
-  routes,
-  // 这里使用历史记录模式
-  history: createWebHistory(),
-});
+  history: createWebHashHistory(),
+  routes: staticRoutes as RouteRecordRaw[],
+  // 刷新时，滚动条位置还原
+  scrollBehavior: () => ({ left: 0, top: 0 }),
+})
 
-router.beforeEach((to, from, next) => {
-  const userStore = useUserStore();
-  const isAuthenticated = userStore.getToken() && userStore.getToken() !== "";
-  if (isAuthenticated) {
-    next();
-  } else {
-    if (to.name === "Login") {
-      next();
-    } else {
-      next({ name: "Login", query: { redirect: to.fullPath } });
-    }
-  }
-});
-
-export const useRouter = (app: App<Element>): void => {
-    app.use(router)
-}
+export default router

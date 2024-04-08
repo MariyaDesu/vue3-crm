@@ -1,37 +1,46 @@
-import { defineStore } from "pinia";
-// import { UserInfo } from "@/api/types/userTypes";
-import { LoginRequest } from "@/api/types/authTypes";
-import { login } from "@/api/authApi";
-import { useStorage } from "@vueuse/core";
-
-export const useUserStore = defineStore("user", () => {
-
-  const tokenRef = useStorage("TOKEN", "", sessionStorage);
-
-
-
-  function setToken(token: string) {
-    tokenRef.value = token;
-  }
-
-  async function toLogin(param: LoginRequest) {
-    await login(param).then((res:any) => {
-      setToken(res.data.token);
-      // setUserInfo(res.userInfo);
-    });
-  }
-
-  function toLogout() {
-    // setUserInfo({} as UserInfo);
-    setToken("");
-    window.location.href = '/login'
-  }
-
-
-
-  function getToken() {
-    return tokenRef.value;
-  }
-
-  return { toLogin, toLogout, getToken};
-});
+/*
+ * @Author: 朽木白
+ * @Date: 2023-02-06 11:02:58
+ * @LastEditors: 1547702880@@qq.com
+ * @LastEditTime: 2023-03-10 15:22:05
+ * @Description: 用户store
+ */
+import { defineStore } from 'pinia'
+import { getUserInfo, logout } from '@/api'
+import type { UserState } from './model/userModel'
+import type { UserInfo } from '@/api/user/types'
+import { useAuthStore } from './auth'
+import { RESEETSTORE } from '@/utils/reset'
+export const useUserStore = defineStore({
+  id: 'app-user',
+  state: (): UserState => ({
+    token: '',
+    userInfo: null,
+  }),
+  actions: {
+    // setToken
+    setToken(token:any) {
+      console.log(token);
+      this.token = token.token
+    },
+    // setUserInfo
+    setUserInfo(userInfo: UserInfo) {
+      this.userInfo = userInfo
+    },
+    async GetInfoAction() {
+      const { data } = await getUserInfo()
+      const { avatar, buttons, name, roles, routes } = data
+      const authStore = useAuthStore()
+      // 存储用户信息
+      this.setUserInfo({ avatar, name })
+      // 存储用户权限信息
+      authStore.setAuth({ buttons, roles, routes })
+    },
+    async Logout() {
+      await logout()
+      RESEETSTORE()
+    },
+  },
+  // 设置为true，缓存state
+  persist: true,
+})

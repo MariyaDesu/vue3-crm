@@ -1,17 +1,20 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 
+
 import 'uno.css'
 import '@/styles/index.scss'
 
-import { useStore } from '@/store'
 
-// router
-import { useRouter } from '@/router'
+import pinia from './store/index'
+import router from './router'
 
+import '@/router/initDynamicRouter'
 const app = createApp(App)
+app.use(pinia)
 
-useStore(app)
-useRouter(app)
+app.use(router)
+
+// app.use(directives)
 
 app.mount('#app')

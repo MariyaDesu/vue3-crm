@@ -3,18 +3,9 @@
     <div class="t-login-header">Tutelary</div>
     <n-card size="large" class="t-login-form">
       <n-h2 style="font-weight: 400">Sign In</n-h2>
-      <n-form
-        ref="formRef"
-        label-placement="left"
-        size="large"
-        :model="formModel"
-        :rules="formRules"
-      >
+      <n-form ref="formRef" label-placement="left" size="large" :model="formModel" :rules="formRules">
         <n-form-item path="username">
-          <n-input
-            v-model:value="formModel.username"
-            placeholder="Input your username"
-          >
+          <n-input v-model:value="formModel.username" placeholder="Input your username">
             <template #prefix>
               <n-icon size="18" color="#808695">
                 <PersonOutline />
@@ -23,10 +14,7 @@
           </n-input>
         </n-form-item>
         <n-form-item path="password">
-          <n-input
-            v-model:value="formModel.password"
-            placeholder="Input your password"
-          >
+          <n-input v-model:value="formModel.password" placeholder="Input your password">
             <template #prefix>
               <n-icon size="18" color="#808695">
                 <LockClosedOutline />
@@ -45,33 +33,35 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref } from "vue";
-import { LoginRequest } from "@/api/types/authTypes";
+import { ref } from "vue";
 import { useUserStore } from "@/store/modules/user";
 import { useRouter, useRoute } from "vue-router";
-
+// import { HOME_URL } from '@/config/config'
+import { login } from '@/api'
 const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
 
 const formRef = ref();
 
-const formModel: Ref<LoginRequest> = ref({
-  username: "",
-  password: "",
-});
+const formModel = ref({
+  username: 'admin',
+  password: '111111',
+})
 
 const formRules = {
   username: { required: true, message: "Please Input Your Username", trigger: "blur" },
   password: { required: true, message: "Please Input Your Password", trigger: "blur" },
 };
 
-const toLogin = (e:any) => {
+const toLogin = (e: any) => {
   e.preventDefault();
   formRef.value.validate(async (errors: any) => {
     // 如果没有校验异常
     if (!errors) {
-      await userStore.toLogin(formModel.value);
+      const { data } = await login(formModel.value);
+      userStore.setToken(data)
+      // router.replace((route.query.redirect as string) || HOME_URL)
       window.$notification.success({
         content: "欢迎回来 - ",
         duration: 2000,
